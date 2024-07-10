@@ -4,11 +4,17 @@ from django.shortcuts import render
 # Импортируем класс BirthdayForm, чтобы создать экземпляр формы.
 from .forms import BirthdayForm
 
+from .utils import calculate_birthday_countdown
+
 
 def birthday(request):
-    # Создаём экземпляр класса формы.
-    form = BirthdayForm()
-    # Добавляем его в словарь контекста под ключом form:
+    form = BirthdayForm(request.GET or None)
     context = {'form': form}
-    # Указываем нужный шаблон и передаём в него словарь контекста.
+
+    if form.is_valid():
+        birthday_countdown = calculate_birthday_countdown(
+            # ...и передаём в неё дату из словаря cleaned_data.
+            form.cleaned_data['birthday']
+        )
+        context.update({'birthday_countdown': birthday_countdown})
     return render(request, 'birthday/birthday.html', context)
