@@ -14,17 +14,20 @@ def birthday(request, pk=None):
         instance = get_object_or_404(Birthday, pk=pk)
     else:
         instance = None
-    form = BirthdayForm(request.POST or None, instance=instance)
+    form = BirthdayForm(request.POST or None,
+                        files=request.FILES or None, instance=instance)
     context = {'form': form}
 
     if form.is_valid():
         form.save()
+        birthday_date = form.cleaned_data['birthday']
         birthday_countdown = calculate_birthday_countdown(
             # ...и передаём в неё дату из словаря cleaned_data.
             form.cleaned_data['birthday']
         )
         context.update({'birthday_countdown': birthday_countdown})
     return render(request, 'birthday/birthday.html', context)
+
 
 def delete_birthday(request, pk):
     # Получаем объект модели или выбрасываем 404 ошибку.
@@ -42,9 +45,10 @@ def delete_birthday(request, pk):
     # Если был получен GET-запрос — отображаем форму.
     return render(request, 'birthday/birthday.html', context)
 
+
 def birthday_list(request):
     # Получаем все объекты модели Birthday из БД.
     birthdays = Birthday.objects.all()
     # Передаём их в контекст шаблона.
     context = {'birthdays': birthdays}
-    return render(request, 'birthday/birthday_list.html', context) 
+    return render(request, 'birthday/birthday_list.html', context)
