@@ -14,7 +14,6 @@ class Birthday(models.Model):
     birthday = models.DateField('Дата рождения', validators=(real_age,))
     image = models.ImageField('Фото', upload_to='birthdays_images', blank=True)
 
-
     class Meta:
         constraints = (
             models.UniqueConstraint(
@@ -23,7 +22,6 @@ class Birthday(models.Model):
             ),
         )
 
-
     def get_absolute_url(self):
         # С помощью функции reverse() возвращаем URL объекта.
-        return reverse('birthday:detail', kwargs={'pk': self.pk}) 
+        return reverse('birthday:detail', kwargs={'pk': self.pk})
