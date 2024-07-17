@@ -1,7 +1,7 @@
 # birthday/forms.py
 from django import forms
 
-from .models import Birthday
+from .models import Birthday, Congratulation
 
 from django.core.exceptions import ValidationError
 
@@ -28,10 +28,10 @@ class BirthdayForm(forms.ModelForm):
     def clean_first_name(self):
         # Получаем значение имени из словаря очищенных данных.
         first_name = self.cleaned_data['first_name']
-        # Разбиваем полученную строку по пробелам 
+        # Разбиваем полученную строку по пробелам
         # и возвращаем только первое имя.
         return first_name.split()[0]
-    
+
     def clean(self):
         super().clean()
         # Получаем имя и фамилию из очищенных полей формы.
@@ -48,4 +48,11 @@ class BirthdayForm(forms.ModelForm):
             )
             raise ValidationError(
                 'Мы тоже любим Битлз, но введите, пожалуйста, настоящее имя!'
-            ) 
+            )
+
+
+class CongratulationForm(forms.ModelForm):
+
+    class Meta:
+        model = Congratulation
+        fields = ('text',)
